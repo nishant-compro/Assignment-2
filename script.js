@@ -5,14 +5,22 @@ class Books {
   }
 
   async getBooks() {
-    try {
-      const res = await fetch("data/books.json");
-      const fetchedBooks = await res.json();
-      this.bookList = fetchedBooks;
-      insertToTable(this.bookList, tableAllBooks);
-    } catch (error) {
-      console.log(error);
-    }
+    const promiseData = Promise.resolve(fetch("data/books.json")).then(
+      (res) => res.json(),
+      (err) => {
+        console.log(err);
+      }
+    );
+
+    promiseData.then(
+      (data) => {
+        this.bookList = data;
+        insertToTable(this.bookList, tableAllBooks);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   searchById() {
